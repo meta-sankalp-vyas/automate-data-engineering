@@ -37,18 +37,18 @@ class connectpostgres:
 	def establishConnection(self):
 		self.readConfig()
 		utility = Utility()
-		utility.writeLogs(ResourceLocation.LogFileLocation.value, LogMessage.DBConnection.value, "","a")
+		utility.writeLogs(ResourceLocation.LogFileLocation.value, LogMessage.DBConnection.value, "","a", False)
 		self.dbConnection = psycopg2.connect(host= self.hostName, port = self.portValue, database= self.dbName, user= self.userName, password= self.password)
 		if self.dbConnection is None:
-			utility = Utility()
-			utility.writeLogs(ResourceLocation.LogFileLocation.value, LogMessage.DBConnectionError.value, "","a")
+			utility.writeLogs(ResourceLocation.LogFileLocation.value, LogMessage.DBConnectionError.value, "","a", True)
+		else:
+			utility.writeLogs(ResourceLocation.LogFileLocation.value, LogMessage.DBConnectionSuccess.value, "","a", True)
 
 	def readConfig(self):
 		# Read the file and config the connection variables
 		file = FileUtil(self.configFileName,"r")
 		dbConfiguration = file.getFileContent()
 		config = dbConfiguration[int(self.configLine)]
-		print(config)
 		configArray = config.split(self.configDelimiter)
 		self.hostName = configArray[0]
 		self.portValue = configArray[1]
@@ -69,6 +69,10 @@ class connectpostgres:
 	def executeSQLAndFetchAll(self, sqlQuery):
 		self.executeSQL(sqlQuery)
 		return self.dbCursor.fetchall()
+
+	def copyFromCSVs(self, file, tableName, seperator):
+		self.getDBCursor().copy_from(file, tableName, sep=seperator)
+		return True
 
 	def commitTransaction(self):
 		if self.dbConnection is not None:

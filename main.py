@@ -2,6 +2,7 @@ import sys
 sys.path.append(".")
 from connectpostgres import connectpostgres as DBConnectionUtil
 from databaseutil import databaseutil as DBUtil
+from databaseprocessutil import databaseprocessutil as DBProcessUtil
 from fileutil import fileutil as FileUtil
 from utility import utility as Utility
 from utility import logmessage as LogMessage
@@ -13,19 +14,36 @@ from utility import sqlcommandsphrases as SQLCommandsPhrases
 
 # Config Line in the databas-config file that is to be used to establish the connection
 util = Utility()
-util.writeLogs(ResourceLocation.LogFileLocation.value,LogMessage.ApplicationStarted.value,"","w")
-configToBeUsed = input("Line no of the Config to be used: ")
+util.writeLogs(ResourceLocation.LogFileLocation.value,"","","w", False)
+util.writeLogs(ResourceLocation.LogFileLocation.value,LogMessage.ApplicationStarted.value,"","a", True)
 
-dbConnection = DBConnectionUtil(configToBeUsed, ":", "database-config.txt")
+dbutil = DBUtil()
+dbProcessUtil = DBProcessUtil()
+configToBeUsed = input("Line no of the Config to be used: ")
+dbConnection = DBConnectionUtil(configToBeUsed, ":", ResourceLocation.DatabaseConfig.value)
+while True:  
+    userInput = input("1.) Do you want to build the Schema and load the to the DB?\n"
+                    +"2.) Process the Loaded records based on the Set Configuration.\n"
+                    +"3.) Change the DB Configuration.\n"
+                    +"4.) Exit"
+                    )  
+    if userInput == "4":  
+        util.writeLogs(ResourceLocation.LogFileLocation.value,"Exiting","","a", True)
+        break
+    elif userInput == "1":
+        util.writeLogs(ResourceLocation.LogFileLocation.value,"Loading Data","","a", False)
+        dbutil.createSchema(dbConnection)
+        dbutil.loadDataFromCSV(dbConnection, SQLCommandsPhrases.SchemaName.value)
+    elif userInput == "2":
+        util.writeLogs(ResourceLocation.LogFileLocation.value,"Processing Data","","a", False)
+        dbProcessUtil.processToExtractData(dbConnection)
+    elif userInput == "3":
+        util.writeLogs(ResourceLocation.LogFileLocation.value,"Change Configuration","","a", False)
+        configToBeUsed = input("Line no of the Config to be used: ")
+        dbConnection = DBConnectionUtil(configToBeUsed, ":", ResourceLocation.DatabaseConfig.value)
+
+
+
 #result = dbConnection.executeSQLAndFetchAll("""SELECT * FROM \"sankalp-dev\".\"Certification Status\" LIMIT 10""")
 #print(result)
 #dbConnection.closeDBConnection()
-
-dbutil = DBUtil()
-dbutil.createDataTablesSQLScript(SQLCommandsPhrases.SchemaName.value)
-sqlRead = FileUtil(ResourceLocation.DatabaseScript.value, "r")
-util.writeLogs(ResourceLocation.LogFileLocation.value, "", LogMessage.DBDatabaseCreation.value,"a")		
-dbConnection.executeSQL(sqlRead.readFile())
-dbConnection.commitTransaction()
-dbConnection.closeDBConnection()
-util.writeLogs(ResourceLocation.LogFileLocation.value, "", LogMessage.Completed.value,"a")
