@@ -1,0 +1,3 @@
+tableName,tableNameJoined,joinType,on,whereClause,orderBy,limit
+certification_status,certification_status_wa,INNER JOIN,certifiation_status.id = certifcation_status_wa.id,id = '121',user_id,
+certification_status_wa,certification_status,LEFT JOIN,certifiation_status.user_id = certifcation_status_wa.user_id,,user_id,10
