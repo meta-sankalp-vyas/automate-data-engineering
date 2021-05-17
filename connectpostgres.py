@@ -1,5 +1,4 @@
-import psycopg2
-import sys
+import psycopg2, sys
 sys.path.append(".")
 from fileutil import fileutil as FileUtil
 from utility import utility as Utility
@@ -18,6 +17,7 @@ class connectpostgres:
 		self.dbName=None
 		self.userName=None
 		self.password=None
+		self.schemaName=None
 		
 	def getConfigLine(self):
 		return self.configLine
@@ -27,6 +27,9 @@ class connectpostgres:
 
 	def getConfigDelimiter(self):
 		return self.configDelimiter
+
+	def getSchemaName(self):
+		return self.schemaName
 
 	def getDBCursor(self):
 		if self.dbConnection is None:
@@ -55,6 +58,7 @@ class connectpostgres:
 		self.dbName = configArray[2]
 		self.userName = configArray[3]
 		self.password = configArray[4]
+		self.schemaName = configArray[5]
 	
 	def closeDBConnection(self):
 		self.dbCursor.close()
@@ -71,7 +75,13 @@ class connectpostgres:
 		return self.dbCursor.fetchall()
 
 	def copyFromCSVs(self, file, tableName, seperator):
-		self.getDBCursor().copy_from(file, tableName, sep=seperator)
+		copyQuery = "COPY " + tableName + " FROM STDIN WITH CSV HEADER"
+		self.getDBCursor().copy_expert(copyQuery, file)
+		return True
+
+	def copyToCSVs(self, file, query, seperator):
+		copyQuery = "COPY (" + query + ") TO STDOUT WITH CSV HEADER"
+		self.getDBCursor().copy_expert(copyQuery, file)
 		return True
 
 	def commitTransaction(self):

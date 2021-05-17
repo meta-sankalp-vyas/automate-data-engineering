@@ -1,2 +1,2 @@
-hostname:port:database:username:password
-localhost:5432:postgres:postgres:
+hostname:port:database:username:password:schemaName
+localhost:5432:postgres:postgres::sankalp_dev_test

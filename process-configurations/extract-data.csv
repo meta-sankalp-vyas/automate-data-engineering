@@ -1,3 +1,1 @@
-tableName,whereClause,orderBy,limit
-sankalp_dev.certification_status,id = '121',user_id,
-sankalp_dev.certification_status_wa,,user_id,10
+tableName,tableNameJoined,joinType,on,whereClause,orderBy,limit
