@@ -1,6 +1,4 @@
-import time
-import enum
-import sys
+import time, enum, sys, os
 sys.path.append(".")
 from fileutil import fileutil as FileUtil
 
@@ -58,3 +56,11 @@ class utility:
 	def writeCommandSqlScript(self, content, fileLocation):
 		fileTo = FileUtil(fileLocation, "w")
 		fileTo.writeFileContent(content)
+
+	def clear_screen(self):
+		# for mac and linux(here, os.name is 'posix')
+		if os.name == 'posix':
+			_ = os.system('clear')
+		else:
+			# for windows platfrom
+			_ = os.system('cls')
