@@ -20,7 +20,7 @@ class databaseutil:
 		print("Loading Data....")
 		utility = Utility()
 		fileList = os.listdir(ResourceLocation.DatabaseLocation.value)
-		filePaths = self.getFilePaths(fileList)
+		filePaths = self.getFilePaths(fileList, "csv", ResourceLocation.DatabaseLocation.value)
 		for filePath in filePaths:
 			file = (FileUtil(filePath, "r")).getFile()
 			dbConnection.copyFromCSVs(file, schemaName + "." + (((filePath.split("/"))[2]).split("."))[0], ",")
@@ -40,7 +40,7 @@ class databaseutil:
 
 	def getTableHeader(self, fileList):
 		utility = Utility()
-		filePaths = self.getFilePaths(fileList)
+		filePaths = self.getFilePaths(fileList, "csv", ResourceLocation.DatabaseLocation.value)
 		utility.writeLogs(ResourceLocation.LogFileLocation.value, ("\n").join(filePaths), LogMessage.Files.value,"a", False)
 		tableHeaders = []
 		for filePath in filePaths:
@@ -48,11 +48,11 @@ class databaseutil:
 			tableHeaders.append(fileHeader)
 		return tableHeaders
 
-	def getFilePaths(self, fileList):
+	def getFilePaths(self, fileList, getOnly, preLocation):
 		filePaths = []
 		for fileName in fileList:
-			if "csv" in fileName: 
-				filePaths.append(ResourceLocation.DatabaseLocation.value + fileName)
+			if getOnly in fileName: 
+				filePaths.append(preLocation + fileName)
 		return filePaths
 		
 	def createCommandsFromHeaders(self, tableHeaders, fileList, schemaName):
@@ -77,6 +77,32 @@ class databaseutil:
 			createTableCommands.append(createCommand)
 			tableIndex += 1
 		return createTableCommands
+
+	def loadAlterSQL(self, dbConnection):
+		fileList = os.listdir(ResourceLocation.AlterDatabaseSQLs.value)
+		index = 0
+		if len(fileList) > 0:
+			print("Choose a file:\n")
+			foundSQLScript = False
+			for fileName in fileList:
+				index += 1
+				if "sql" in fileName:
+					print((str)(index) + ".) " + fileName + "\n")
+					foundSQLScript = True
+			if foundSQLScript == True:
+				choosenFileIndex = input()
+				print(choosenFileIndex)
+				filePaths = self.getFilePaths(fileList, "sql", ResourceLocation.AlterDatabaseSQLs.value)
+				print(filePaths)
+				filePath = filePaths[(int)(choosenFileIndex) - 1]
+				print(filePath)
+				file = FileUtil(filePath,"r")
+				self.executeAndCommitToDatabase(dbConnection, file)
+			else:
+				print("Sorry, No SQL Files Exists in the Folder.")
+		else:
+			print("Sorry, No SQL Files Exists in the Folder.")
+
 
 	def executeAndCommitToDatabase(self, dbConnection, sqlRead):
 		dbConnection.executeSQL(sqlRead.readFile())

@@ -22,6 +22,7 @@ class resourcelocation(enum.Enum):
 	DatabaseScript = "./logs/SQLScriptTable.sql"
 	DatabaseRecordsScript = "./logs/SQLScriptTableRecords.sql"
 	DatabaseConfig = "database-config.txt"
+	AlterDatabaseSQLs = "./alter-scripts/"
 
 class processlocation(enum.Enum):
 	ProcessConfigExtractData = "./process-configurations/extract-data.csv"
