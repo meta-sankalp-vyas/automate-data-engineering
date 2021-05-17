@@ -14,7 +14,7 @@ class fileutil:
 		fileContent = readFileConfiguration.readlines()
 		return fileContent
 
-	def writeFileContect(self, content):
+	def writeFileContent(self, content):
 		writeFileConfiguration = open(self.fileLocation,self.fileAccess)
 		writeFileConfiguration.write(content)
 		writeFileConfiguration.close()
@@ -24,3 +24,6 @@ class fileutil:
 		readFileConfiguration = open(self.fileLocation,self.fileAccess)
 		fileContent = readFileConfiguration.read()
 		return fileContent
+
+	def getFile(self):
+		return open(self.fileLocation,self.fileAccess)
