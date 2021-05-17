@@ -1,5 +1,4 @@
-import os
-import sys
+import os, sys
 sys.path.append(".")
 from fileutil import fileutil as FileUtil
 from utility import utility as Utility
@@ -9,26 +8,26 @@ from utility import sqlcommandsphrases as SQLCommandsPhrases
 
 class databaseutil:
 
-	def createSchema(self, dbConnection):
+	def createSchema(self, dbConnection, schemaName):
 		utility = Utility()
-		self.createDataTablesSQLScript(SQLCommandsPhrases.SchemaName.value)
+		self.createDataTablesSQLScript(schemaName)
 		sqlRead = FileUtil(ResourceLocation.DatabaseScript.value, "r")
 		utility.writeLogs(ResourceLocation.LogFileLocation.value, "", LogMessage.DBDatabaseCreation.value,"a", False)		
 		self.executeAndCommitToDatabase(dbConnection, sqlRead)
 		utility.writeLogs(ResourceLocation.LogFileLocation.value, "", LogMessage.Completed.value,"a", True)
 
 	def loadDataFromCSV(self, dbConnection, schemaName):
+		print("Loading Data....")
 		utility = Utility()
 		fileList = os.listdir(ResourceLocation.DatabaseLocation.value)
 		filePaths = self.getFilePaths(fileList)
-		insertSQLs = []
 		for filePath in filePaths:
 			file = (FileUtil(filePath, "r")).getFile()
 			dbConnection.copyFromCSVs(file, schemaName + "." + (((filePath.split("/"))[2]).split("."))[0], ",")
 			dbConnection.commitTransaction()
 		dbConnection.closeDBConnection()
 		utility.writeLogs(ResourceLocation.LogFileLocation.value, "", LogMessage.Completed.value,"a", True)
-		print("Loading Data")
+		print("Data Loaded.")
 
 	def createDataTablesSQLScript(self, schemaName):
 		utility = Utility()
