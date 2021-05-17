@@ -3,6 +3,10 @@ sys.path.append(".")
 from connectpostgres import connectpostgres as DBConnectionUtil
 from databaseutil import databaseutil as DBUtil
 from databaseprocessutil import databaseprocessutil as DBProcessUtil
+<<<<<<< HEAD
+=======
+from fileutil import fileutil as FileUtil
+>>>>>>> cb94381d1e5b1b21e304c8cdfaa05862365ebc3e
 from utility import utility as Utility
 from utility import logmessage as LogMessage
 from utility import resourcelocation as ResourceLocation
