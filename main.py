@@ -1,12 +1,8 @@
-import sys
+import sys, time
 sys.path.append(".")
 from connectpostgres import connectpostgres as DBConnectionUtil
 from databaseutil import databaseutil as DBUtil
 from databaseprocessutil import databaseprocessutil as DBProcessUtil
-<<<<<<< HEAD
-=======
-from fileutil import fileutil as FileUtil
->>>>>>> cb94381d1e5b1b21e304c8cdfaa05862365ebc3e
 from utility import utility as Utility
 from utility import logmessage as LogMessage
 from utility import resourcelocation as ResourceLocation
@@ -34,23 +30,40 @@ while True:
     userInput = input("1.) Do you want to build the Schema and load the to the DB?\n"
                     +"2.) Process the Loaded records based on the Set Configuration.\n"
                     +"3.) Change the DB Configuration.\n"
-                    +"4.) Exit\n"
+                    +"4.) Alter DB with Alter Scripts.\n"
+                    +"5.) Exit\n"
                     )  
-    if userInput == "4":  
+    if userInput == "5":  
         util.writeLogs(ResourceLocation.LogFileLocation.value,"Exiting","","a", True)
+        print("Exiting....")
+        time.sleep(1)
         util.clear_screen()
         break
     elif userInput == "1":
         util.writeLogs(ResourceLocation.LogFileLocation.value,"Loading Data","","a", False)
         dbutil.createSchema(dbConnection, schemaName)
+        time.sleep(2)
         dbutil.loadDataFromCSV(dbConnection, schemaName)
+        print("Loading Data")
+        time.sleep(2)
         util.clear_screen()
     elif userInput == "2":
         util.writeLogs(ResourceLocation.LogFileLocation.value,"Processing Data","","a", False)
         dbProcessUtil.processToExtractData(dbConnection)
+        print("Data Extracted")
+        time.sleep(2)
         util.clear_screen()
     elif userInput == "3":
         util.writeLogs(ResourceLocation.LogFileLocation.value,"Change Configuration","","a", False)
         configToBeUsed = input("Line no of the Config to be used: ")
         dbConnection = DBConnectionUtil(configToBeUsed, ":", ResourceLocation.DatabaseConfig.value)
+        print("Configuration Reset")
+        time.sleep(1)
         util.clear_screen()
+    elif userInput == "4":
+        util.writeLogs(ResourceLocation.LogFileLocation.value,"Alter DB","","a", False)
+        dbutil.loadAlterSQL(dbConnection)
+        print("Alter Table Finished")
+        time.sleep(2)
+        util.clear_screen()
+
