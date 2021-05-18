@@ -1,10 +1,11 @@
-import os, sys
+import os, sys, traceback
 sys.path.append(".")
 from fileutil import fileutil as FileUtil
 from utility import utility as Utility
 from utility import logmessage as LogMessage
 from utility import resourcelocation as ResourceLocation
 from utility import sqlcommandsphrases as SQLCommandsPhrases
+from error import Error as Error
 
 class databaseutil:
 
@@ -82,7 +83,7 @@ class databaseutil:
 		fileList = os.listdir(ResourceLocation.AlterDatabaseSQLs.value)
 		index = 0
 		if len(fileList) > 0:
-			print("Choose a file:\n")
+			print("Choose the file number:\n")
 			foundSQLScript = False
 			for fileName in fileList:
 				index += 1
@@ -90,14 +91,18 @@ class databaseutil:
 					print((str)(index) + ".) " + fileName + "\n")
 					foundSQLScript = True
 			if foundSQLScript == True:
+				exceptionFlag = False
 				choosenFileIndex = input()
-				print(choosenFileIndex)
 				filePaths = self.getFilePaths(fileList, "sql", ResourceLocation.AlterDatabaseSQLs.value)
-				print(filePaths)
-				filePath = filePaths[(int)(choosenFileIndex) - 1]
-				print(filePath)
-				file = FileUtil(filePath,"r")
-				self.executeAndCommitToDatabase(dbConnection, file)
+				try:
+					filePath = filePaths[(int)(choosenFileIndex) - 1]
+				except Exception as e:
+					er = Error("You have chosen wrong file as an Input.", traceback.format_exc())
+					er.handleError()
+					exceptionFlag = True
+				if 	exceptionFlag == False:
+					file = FileUtil(filePath,"r")
+					self.executeAndCommitToDatabase(dbConnection, file)
 			else:
 				print("Sorry, No SQL Files Exists in the Folder.")
 		else:
