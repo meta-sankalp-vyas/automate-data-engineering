@@ -1,4 +1,4 @@
-import sys, time, traceback
+import sys, traceback
 sys.path.append(".")
 from connectpostgres import connectpostgres as DBConnectionUtil
 from databaseutil import databaseutil as DBUtil
@@ -9,10 +9,6 @@ from utility import resourcelocation as ResourceLocation
 from utility import sqlcommandsphrases as SQLCommandsPhrases
 from error import Error as Error
 
-# Establish a connection to the database by creating a cursor object
-# The PostgreSQL server must be accessed through the PostgreSQL APP or Terminal Shell
-
-# Config Line in the databas-config file that is to be used to establish the connection
 util = Utility()
 util.writeLogs(ResourceLocation.LogFileLocation.value,"","","w", False)
 util.writeLogs(ResourceLocation.LogFileLocation.value,LogMessage.ApplicationStarted.value,"","a", True)
@@ -68,6 +64,7 @@ if configToBeUsed is not None:
 				except Exception as e:
 					er = Error("Something went wrong. Unable to Load CSVs to Database. Please check Logs and Schema Queries generated.\n Hint:" + (str)(e), traceback.format_exc())
 					er.handleError()
+					dbConnection.rollBackTransaction()
 			else:
 				print("Please change the DB Configuration to Correct one.")
 		elif userInput == "2":
@@ -81,6 +78,7 @@ if configToBeUsed is not None:
 				except Exception as e:
 					er = Error("Something went wrong. Unable to Process the configuration files. Please check Logs and Queries generated in Process Result Folder.\n Hint:" + (str)(e), traceback.format_exc())
 					er.handleError()
+					dbConnection.rollBackTransaction()
 			else:
 				print("Please change the DB Configuration to Correct one.")
 		elif userInput == "3":
@@ -106,6 +104,7 @@ if configToBeUsed is not None:
 				configToBeUsed = None
 				er = Error("Database cofiguration not set. Please check credentials or the Entry.", traceback.format_exc())
 				er.handleError()
+				dbConnection.rollBackTransaction()
 			#time.sleep(2)
 			#util.clear_screen()
 		elif userInput == "4":
@@ -119,6 +118,7 @@ if configToBeUsed is not None:
 				except Exception as e:
 					er = Error("Something went wrong. Unable to Process the Alterable file. Please check Logs.\n Hint:" + (str)(e), traceback.format_exc())
 					er.handleError()
+					dbConnection.rollBackTransaction()
 			else: 
 				print("Please change the DB Configuration to Correct one.")
 else:

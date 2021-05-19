@@ -22,7 +22,7 @@ class databaseprocessutil:
 
     def getConfiguration(self, fileLocation):
         fileRead = FileUtil(fileLocation, "r")
-        return fileRead.getFileContent()
+        return fileRead.getCSVReader()
 
     def createQueries(self, queriesConfigList, method):
         queries = []
@@ -30,8 +30,8 @@ class databaseprocessutil:
             index = 0
             for queryConfig in queriesConfigList:
                 if index != 0:
-                    configInputs = queryConfig.split(",")
-                    queryToExecute = "SELECT * FROM " + configInputs[0]
+                    configInputs = queryConfig.split("|,|")
+                    queryToExecute = "SELECT * FROM " + (configInputs[0]).replace("|","")
                     if (configInputs[1] and configInputs[1].strip() and configInputs[2] and configInputs[2].strip() 
                         and configInputs[3] and configInputs[3].strip()):
                         queryToExecute += "  " + configInputs[2] + " " + configInputs[1] + " ON " + configInputs[3]
@@ -40,7 +40,7 @@ class databaseprocessutil:
                     if (configInputs[5] and configInputs[5].strip()):
                         queryToExecute += " ORDER BY " + configInputs[5]
                     if (configInputs[6] and configInputs[6].strip()):
-                        queryToExecute += " LIMIT " + configInputs[6]
+                        queryToExecute += " LIMIT " + (configInputs[6]).replace("|","")
                     queries.append(queryToExecute)
                 index += 1
         return queries

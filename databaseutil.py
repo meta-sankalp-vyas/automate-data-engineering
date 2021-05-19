@@ -67,7 +67,7 @@ class databaseutil:
 			createCommand = SQLCommandsPhrases.CreateTable.value + schemaName + "." + (fileList[tableIndex]).split(".")[0] +" ("
 			tableColumnIndex = 0
 			for tableColumn in tableColumns:
-				createCommand += " " + tableColumn + SQLCommandsPhrases.CharacterVarying.value
+				createCommand += " " + tableColumn.replace(" ","_") + " " +SQLCommandsPhrases.CharacterVarying.value
 				if tableColumnIndex == 0:
 					createCommand += SQLCommandsPhrases.PrimaryKey.value + ","
 				elif len(tableColumns) > (tableColumnIndex + 1):
