@@ -47,7 +47,7 @@ class sqlcommandsphrases(enum.Enum):
 
 class utility:
 
-	def writeLogs(self, fileLocation, content, message, access, doComplete):
+	def writeLogs(self, fileLocation, message, content, access, doComplete):
 		t = time.localtime()
 		logCommands = FileUtil(fileLocation,access)
 		logCommands.writeFileContent(time.strftime("%H:%M:%S", t) + " : " + message + "\n" + content + "\n")
