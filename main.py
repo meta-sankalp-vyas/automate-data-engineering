@@ -123,6 +123,3 @@ if configToBeUsed is not None:
 				print("Please change the DB Configuration to Correct one.")
 else:
 	print("Ended")
-
-
-
