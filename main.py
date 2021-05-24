@@ -1,6 +1,6 @@
 import sys, traceback
 sys.path.append(".")
-from connectpostgres import connectpostgres as DBConnectionUtil
+from connectpostgresql import connectpostgresql as DBConnectionUtil
 from databaseutil import databaseutil as DBUtil
 from databaseprocessutil import databaseprocessutil as DBProcessUtil
 from utility import utility as Utility
