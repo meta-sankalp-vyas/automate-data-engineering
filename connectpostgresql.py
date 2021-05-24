@@ -5,7 +5,7 @@ from utility import utility as Utility
 from utility import logmessage as LogMessage
 from utility import resourcelocation as ResourceLocation
 
-class connectpostgres:
+class connectpostgresql:
 	def __init__(self,configLine,configDelimiter,configFileName):
 		self.configFileName=configFileName
 		self.configLine=configLine
