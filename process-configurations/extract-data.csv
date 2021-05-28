@@ -1,0 +1,2 @@
+tableName,tableNameJoined,joinType,on,whereClause,orderBy,limit
+|sankalp_dev_test.certification_status_wa|,|sankalp_dev_test.certification_status|,|LEFT OUTER JOIN|,|certification_status.id == certification_status_wa.id|,|certification_status_wa.id IS NULL|,,
