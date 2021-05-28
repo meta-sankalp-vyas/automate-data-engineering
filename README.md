@@ -1,7 +1,7 @@
 # automate-data-engineering
 
 Issue: 
-* In data comparison of reports extracted from different teams the basic model for comparison is VLOOKUP on Excel Sheet Validation.
+* In data comparison of reports extracted from different databse systems the basic model for comparison is VLOOKUP on Excel Sheet.
 * Applying VLookups can be transformed into a Template Based Sheet, but that would just increase the number of templates that the Team would have to manage.
 * Need an automated solution, which based on the configuration provided will extract the related data from the CSV 
 
