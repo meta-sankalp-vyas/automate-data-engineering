@@ -69,8 +69,8 @@ class databaseutil:
 			for tableColumn in tableColumns:
 				createCommand += " " + tableColumn.replace(" ","_") + " " +SQLCommandsPhrases.CharacterVarying.value
 				if tableColumnIndex == 0:
-					createCommand += SQLCommandsPhrases.PrimaryKey.value + ","
-				elif len(tableColumns) > (tableColumnIndex + 1):
+					createCommand += SQLCommandsPhrases.PrimaryKey.value
+				if len(tableColumns) > (tableColumnIndex + 1):
 					createCommand += ","
 				tableColumnIndex += 1
 			createCommand += ");"
